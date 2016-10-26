@@ -1,0 +1,12 @@
+<xs:schema 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="cm"
+  delemntFormDefault="qualified">
+  
+  <xs:simpleType name="non-empty-str">
+     <xs:restriction base="xs:string">
+       <xs:minLength value="1"/>
+     </xs:restriction>
+  </xs:simpleType>
+  
+</xs:schema>

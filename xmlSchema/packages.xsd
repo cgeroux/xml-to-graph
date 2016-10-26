@@ -1,0 +1,97 @@
+<xs:schema 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:cm="cm"
+  delemntFormDefault="qualified">
+  
+  <xs:import schemaLocation="common.xsd" namespace="cm" />
+  
+  <xs:element name="packages">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="package" type="package-type" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:complexType name="package-type">
+    <xs:all>
+      <xs:element name="name" type="cm:non-empty-str" minOccurs="1" maxOccurs="1" />
+      <xs:element name="classes" type="classes-type" minOccurs="1" maxOccurs="1" />
+    </xs:all>
+  </xs:complexType>
+  
+  <xs:complexType name="classes-type">
+    <xs:sequence>
+      <xs:element name="class" type="class-type" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  
+  <!--Add new action setting types here to be chosen under the "parameters" xml element-->
+  <xs:complexType name="class-type">
+    <xs:all>
+      <xs:element name="name" type="cm:non-empty-str" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="attributes" type="attributes-type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="methods" type="methods-type"  minOccurs="0" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  
+  <xs:complexType name="attributes-type">
+    <xs:sequence>
+      <xs:element name="attribute" type="attribute-type" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="methods-type">
+    <xs:sequence>
+      <xs:element name="method" type="method-type" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="attribute-type">
+    <xs:all>
+      <xs:element name="name" type="cm:non-empty-str" minOccurs="1" maxOccurs="1" />
+      <xs:element name="visibility" type="visibility-type" minOccurs="0" maxOccurs="1" />
+      <xs:element name="type" type="cm:non-empty-str" minOccurs="0" maxOccurs="1" />
+      <xs:element name="value" type="cm:non-empty-str" minOccurs="0" maxOccurs="1" />
+    </xs:all>
+  </xs:complexType>
+  
+  <xs:simpleType name="visibility-type">
+     <xs:restriction base="xs:string">
+       <xs:enumeration value="+"/>
+       <xs:enumeration value="#"/>
+       <xs:enumeration value="-"/>
+       <xs:enumeration value="~"/>
+     </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:complexType name="method-type">
+    <xs:all>
+      <xs:element name="name" type="cm:non-empty-str" minOccurs="1" maxOccurs="1" />
+      <xs:element name="visibility" type="visibility-type" minOccurs="0" maxOccurs="1" />
+      <xs:element name="parameters" type="parameters-type" minOccurs="0" maxOccurs="1" />
+      <xs:element name="return-type" type="cm:non-empty-str" minOccurs="0" maxOccurs="1" />
+    </xs:all>
+  </xs:complexType>
+  
+  <xs:complexType name="parameters-type">
+    <xs:sequence>
+      <xs:element name="parameter" type="parameter-type" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="parameter-type">
+    <xs:all>
+      <xs:element name="name" type="cm:non-empty-str" minOccurs="1" maxOccurs="1" />
+      <xs:element name="type" type="cm:non-empty-str" minOccurs="0" maxOccurs="1" />
+      <xs:element name="direction" type="direction-type" minOccurs="0" maxOccurs="1" />
+    </xs:all>
+  </xs:complexType>
+  
+  <xs:simpleType name="direction-type">
+     <xs:restriction base="xs:string">
+       <xs:enumeration value="in"/>
+       <xs:enumeration value="out"/>
+     </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

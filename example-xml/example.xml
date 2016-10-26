@@ -1,0 +1,42 @@
+<packages>
+
+  <package>
+    <name>Terrain</name>
+    <classes>
+    
+      <class>
+        <name>Index3</name>
+        <attributes>
+          <attribute>
+            <name>i</name><!--must have a name-->
+            <visibility>+</visibility><!--+:public,#:protected,-:private,~:package-->
+            <type>integer</type><!--any string, if another class will create an association-->
+            <value>0</value><!--any string-->
+          </attribute>
+          <attribute>
+            <name>j</name>
+          </attribute>
+          <attribute>
+            <name>k</name>
+          </attribute>
+        </attributes>
+        <methods>
+          <method>
+            <name>operator==</name>
+            <visibility>+</visibility>
+            <parameters>
+              <parameter>
+                <name>a</name>
+                <type>a</type>
+                <direction>in</direction>
+              </parameter>
+            </parameters>
+            <return-type>a</return-type>
+          </method>
+        </methods>
+      </class>
+      
+    </classes>
+  </package>
+  
+</packages>
