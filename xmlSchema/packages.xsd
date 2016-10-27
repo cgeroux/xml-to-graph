@@ -30,6 +30,7 @@
   <xs:complexType name="class-type">
     <xs:all>
       <xs:element name="name" type="cm:non-empty-str" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="stereotype" type="cm:non-empty-str" minOccurs="0" maxOccurs="1"/>
       <xs:element name="attributes" type="attributes-type" minOccurs="0" maxOccurs="1"/>
       <xs:element name="methods" type="methods-type"  minOccurs="0" maxOccurs="1"/>
     </xs:all>

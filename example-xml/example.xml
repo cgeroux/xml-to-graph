@@ -5,6 +5,7 @@
     <classes>
     
       <class>
+        <stereotype>enumeration</stereotype><!--Placed above the class name with between << >>-->
         <name>Index3</name>
         <attributes>
           <attribute>
@@ -15,26 +16,33 @@
           </attribute>
           <attribute>
             <name>j</name>
+            <visibility>-</visibility>
+            <type>integer</type>
+            <value>0</value>
           </attribute>
           <attribute>
             <name>k</name>
+            <visibility>#</visibility>
+            <type>integer</type>
+            <value>0</value>
           </attribute>
         </attributes>
         <methods>
           <method>
-            <name>operator==</name>
+            <name>test</name>
             <visibility>+</visibility>
             <parameters>
               <parameter>
-                <name>a</name>
-                <type>a</type>
+                <name>myFloat</name>
                 <direction>in</direction>
+                <type>float</type>
               </parameter>
             </parameters>
-            <return-type>a</return-type>
+            <return-type>integer</return-type>
           </method>
         </methods>
       </class>
+
       
     </classes>
   </package>
