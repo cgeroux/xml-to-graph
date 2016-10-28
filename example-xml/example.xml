@@ -3,7 +3,6 @@
   <package>
     <name>Terrain</name>
     <classes>
-    
       <class>
         <stereotype>enumeration</stereotype><!--Placed above the class name with between << >>-->
         <name>Index3</name>
@@ -41,10 +40,18 @@
             <return-type>integer</return-type>
           </method>
         </methods>
+        <dependencies><!--list explicit dependencies, overrides any implicit 
+          dependencies discovered by inspecting types used in the class-->
+          <dependency>
+            <target></target><!--name of the class the dependency is on-->
+            <type>dependency</type><!-- type can be dependency
+              , association, aggregation, composition, generalization, 
+                realization -->
+            <tail-label></tail-label>
+            <head-label></head-label>
+          </dependency>
+        </dependencies>
       </class>
-
-      
     </classes>
   </package>
-  
 </packages>

@@ -1,3 +1,11 @@
+Requirements:
+  - graphviz executable
+    - install with `sudo apt-get install graphviz
+  - graphviz python module:
+    - install with `pip install graphviz`
+  - lxml python module:
+    - install with `pip install lxml`
+
 Types of edges:
 
 Dependency:
