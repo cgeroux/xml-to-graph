@@ -49,8 +49,8 @@
         <dependencies><!--To add additional dependencies not indicated via 
           types used in methods or types of attributes-->
           <dependency>
-            <target></target>
-            <type></type><!--
+            <target>Index3</target>
+            <type>dependency</type><!--
               dependency: general dependency in some way, default if none 
                 specified
               association: contains one instance of the target class
