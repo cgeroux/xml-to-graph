@@ -3,7 +3,6 @@
   <package>
     <name>Terrain</name>
     <classes>
-    
       <class>
         <stereotype>enumeration</stereotype><!--Placed above the class name with
           between << >>-->
@@ -63,9 +62,6 @@
           </dependency>
         </dependencies>
       </class>
-
-      
     </classes>
   </package>
-  
 </packages>
