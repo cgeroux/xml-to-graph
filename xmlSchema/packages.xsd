@@ -33,6 +33,7 @@
       <xs:element name="stereotype" type="cm:non-empty-str" minOccurs="0" maxOccurs="1"/>
       <xs:element name="attributes" type="attributes-type" minOccurs="0" maxOccurs="1"/>
       <xs:element name="methods" type="methods-type"  minOccurs="0" maxOccurs="1"/>
+      <xs:element name="dependencies" type="dependencies-type"  minOccurs="0" maxOccurs="1"/>
     </xs:all>
   </xs:complexType>
   
@@ -48,14 +49,44 @@
     </xs:sequence>
   </xs:complexType>
   
+  <xs:complexType name="dependencies-type">
+    <xs:sequence>
+      <xs:element name="dependency" type="dependency-type" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="dependency-type">
+    <xs:all>
+      <xs:element name="target" type="cm:non-empty-str" minOccurs="1" maxOccurs="1" />
+      <xs:element name="type" type="type-type" minOccurs="0" maxOccurs="1" />
+    </xs:all>
+  </xs:complexType>
+  
+  <xs:simpleType name="type-type">
+     <xs:restriction base="xs:string">
+       <xs:enumeration value="dependency"/>
+       <xs:enumeration value="association"/>
+       <xs:enumeration value="aggregation"/>
+       <xs:enumeration value="composition"/>
+     </xs:restriction>
+  </xs:simpleType>
+  
   <xs:complexType name="attribute-type">
     <xs:all>
       <xs:element name="name" type="cm:non-empty-str" minOccurs="1" maxOccurs="1" />
       <xs:element name="visibility" type="visibility-type" minOccurs="0" maxOccurs="1" />
       <xs:element name="type" type="cm:non-empty-str" minOccurs="0" maxOccurs="1" />
       <xs:element name="value" type="cm:non-empty-str" minOccurs="0" maxOccurs="1" />
+      <xs:element name="scope" type="scope-type" minOccurs="0" maxOccurs="1" />
     </xs:all>
   </xs:complexType>
+  
+  <xs:simpleType name="scope-type">
+     <xs:restriction base="xs:string">
+       <xs:enumeration value="inside"/>
+       <xs:enumeration value="outside"/>
+     </xs:restriction>
+  </xs:simpleType>
   
   <xs:simpleType name="visibility-type">
      <xs:restriction base="xs:string">

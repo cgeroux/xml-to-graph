@@ -5,14 +5,20 @@
     <classes>
     
       <class>
-        <stereotype>enumeration</stereotype><!--Placed above the class name with between << >>-->
+        <stereotype>enumeration</stereotype><!--Placed above the class name with
+          between << >>-->
         <name>Index3</name>
         <attributes>
           <attribute>
             <name>i</name><!--must have a name-->
-            <visibility>+</visibility><!--+:public,#:protected,-:private,~:package-->
-            <type>integer</type><!--any string, if another class will create an association-->
+            <visibility>+</visibility><!--+:public,#:protected,-:private,
+              ~:package-->
+            <type>integer</type><!--any string, if another class will create 
+              an association-->
             <value>0</value><!--any string-->
+            <scope>inside</scope><!--can be inside: attribute's lifetime is the 
+              same or shorter than the object of this class, outside: 
+              attribute's lifetime is longer than the object of this class -->
           </attribute>
           <attribute>
             <name>j</name>
@@ -41,6 +47,21 @@
             <return-type>integer</return-type>
           </method>
         </methods>
+        <dependencies><!--To add additional dependencies not indicated via 
+          types used in methods or types of attributes-->
+          <dependency>
+            <target></target>
+            <type></type><!--
+              dependency: general dependency in some way, default if none 
+                specified
+              association: contains one instance of the target class
+              aggregation: contains one instance of the target class and the 
+                objects lifetime is longer than the containing class
+              composition: contains one instance of the target class and the 
+                objects lifetime is equal to or shorter than the containing 
+                class-->
+          </dependency>
+        </dependencies>
       </class>
 
       

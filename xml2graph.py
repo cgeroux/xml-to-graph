@@ -68,7 +68,13 @@ class Attribute(object):
     self.type=None
     if xmlType!=None:
       self.type=xmlType.text
-      
+    
+    #get scope
+    xmlScope=xmlAttribute.find("scope")
+    self.scope="inside"
+    if xmlScope!=None:
+      self.scope=xmlScope.text
+    
     #get value
     xmlValue=xmlAttribute.find("value")
     self.value=None
@@ -151,6 +157,46 @@ class Method(object):
       label+=")"
     label+="\l"
     return label
+  def getTypes(self):
+    
+    #add return type
+    types=set()
+    if self.returnType!=None:
+      types.add(self.returnType)
+    
+    #add parameter types
+    for parameter in self.parameters:
+      if parameter.type!=None:
+        types.add(parameter.type)
+    
+    return types
+class Dependency(object):
+  """
+  """
+  
+  def __init__(self,source,xml=None,target=None,type=None):
+    """
+    """
+    
+    self.source=source
+    
+    #set from xml
+    if xml!=None:
+    
+      #get target
+      self.target=xml.find("target").text
+      
+      #get type
+      xmlType=xml.find("type")
+      self.type="dependency"
+      if xmlType!=None:
+        self.type=xmlType.text
+    
+    #override from keywords
+    if target!=None:
+      self.target=target
+    if type!=None:
+      self.type=type
 class Class(object):
   """
   """
@@ -183,6 +229,34 @@ class Class(object):
       for xmlMethod in xmlMethods:
         methodTemp=Method(xmlMethod)
         self.methods.append(methodTemp)
+    
+    #add implicit dependencies
+    self.dependencies=[]
+    
+    #add attribute types
+    for attribute in self.attributes:
+      if attribute.type!=None:
+          dependencyType="composition"
+          if attribute.scope=="outside":
+            dependencyType="aggregation"
+          self.dependencies.append(Dependency(self.name,target=attribute.type
+            ,type=dependencyType))
+    
+    #add types from methods
+    for method in self.methods:
+      methodTypes=method.getTypes()
+      for type in methodTypes:
+        self.dependencies.append(Dependency(self.name,target=type
+            ,type="dependency"))
+    
+    #get dependencies
+    xmlDependencies=xmlClass.find("dependencies")
+    if xmlDependencies!=None:
+      for xmlDependency in xmlDependencies:
+        dependencyTemp=Dependency(self.name,xmlDependency)
+        self.dependencies.append(dependencyTemp)
+    
+    #TODO: perhaps I should process dependencies to remove duplicates some how
   def getLabel(self):
     """
     """
@@ -220,6 +294,11 @@ class Class(object):
     
     graph.node(name=self.name,label=self.getLabel(),shape="record"
     ,fontname="courier new")
+  def getDependencies(self):
+    """Returns a list of dependencies
+    """
+    
+    return self.dependencies
 class Package(object):
   """
   """
@@ -247,6 +326,12 @@ class Package(object):
     for classTemp in self.classes:
       classTemp.addToGraph(graph)
     return graph
+  def getClasses(self):
+    classes=[]
+    
+    for classTemp in self.classes:
+      classes.append(classTemp.name)
+    return classes
 class PackageManager(object):
   """
   """
@@ -266,9 +351,53 @@ class PackageManager(object):
     """
     
     graph=gv.Digraph(format=format)
-    graph
     for package in self.packages:
       graph.subgraph(package.getGraph())
+      
+    #get edges
+    graph=self.addEdgesToGraph(graph)
+    return graph
+  def addEdgesToGraph(self,graph):
+    """Adds edges to given graph
+    """
+    
+    #TODO: need to implement different dependence types
+    
+    #get list of all classes
+    classes=[]#assume no duplicated class names
+    for package in self.packages:
+      classes+=package.getClasses()
+    
+    #add edges
+    for package in self.packages:
+      for classTmp in package.classes:
+        dependencies=classTmp.getDependencies()
+        for dependency in dependencies:
+          if dependency.target in classes:
+            
+            #add edge from classTmp to type
+            if dependency.type=="dependency":
+              dir="forward"
+              arrowhead="vee"
+              arrowtail="none"
+              style="dashed"
+            elif dependency.type=="association":
+              dir="forward"
+              arrowhead="vee"
+              arrowtail="none"
+              style="solid"
+            elif dependency.type=="aggregation":
+              dir="both"
+              arrowhead="vee"
+              arrowtail="odiamond"
+              style="solid"
+            elif dependency.type=="composition":
+              dir="both"
+              arrowhead="vee"
+              arrowtail="diamond"
+              style="solid"
+            graph.edge(dependency.source,dependency.target,dir=dir
+              ,arrowhead=arrowhead,arrowtail=arrowtail,style=style)
     return graph
   def drawGraph(self,fileName):
     """
