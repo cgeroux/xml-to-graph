@@ -5,6 +5,8 @@ from lxml import etree
 import os
 import graphviz as gv
 
+__version__="1.0.0"
+
 class Parameter(object):
   """Holds data pertaining to a method parameter and generates a label for that
   parameter.

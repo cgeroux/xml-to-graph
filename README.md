@@ -5,6 +5,9 @@ Requirements:
     - install with `pip install graphviz`
   - lxml python module:
     - install with `pip install lxml`
+Installation
+
+$ sudo python setup.py install
 
 Types of edges:
 

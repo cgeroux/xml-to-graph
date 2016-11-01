@@ -1,0 +1,4 @@
+include LICENSE
+include xml2graph/xmlSchema/common.xsd
+include xml2graph/xmlSchema/packages.xsd
+include xml2graph/example-xml/example.xml
