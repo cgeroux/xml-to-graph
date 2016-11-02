@@ -5,7 +5,7 @@
     <classes>
       <class>
         <stereotype>enumeration</stereotype><!--Placed above the class name with
-          between << >>-->
+          between << >>, should be one of enumeration or interface-->
         <name>Index3</name>
         <attributes>
           <attribute>
@@ -46,8 +46,11 @@
             <return-type>integer</return-type>
           </method>
         </methods>
+        <parents>
+          <parent>Test</parent>
+        </parents>
         <dependencies><!--To add additional dependencies not indicated via 
-          types used in methods or types of attributes-->
+          types used in methods or types of attributes or parents.-->
           <dependency>
             <target>Index3</target>
             <type>dependency</type><!--
@@ -58,9 +61,13 @@
                 objects lifetime is longer than the containing class
               composition: contains one instance of the target class and the 
                 objects lifetime is equal to or shorter than the containing 
-                class-->
+                class
+              inheritance: used to indicate this class is a child class of 
+                the target class-->
           </dependency>
         </dependencies>
+      </class>
+      <class><name>Test</name>
       </class>
     </classes>
   </package>
