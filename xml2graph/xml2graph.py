@@ -130,8 +130,9 @@ class Method(object):
     #get parameters
     self.parameters=[]
     xmlParameters=xmlMethod.find("parameters")
-    for xmlParameter in xmlParameters:
-      self.parameters.append(Parameter(xmlParameter))
+    if xmlParameters!=None:
+      for xmlParameter in xmlParameters:
+        self.parameters.append(Parameter(xmlParameter))
   def getLabel(self):
     """
     """
@@ -146,8 +147,8 @@ class Method(object):
     label+=self.name
     
     #add parameters if we have then
+    label+="("
     if len(self.parameters)>0:
-      label+="("
       count=0
       for parameter in self.parameters:
         if count==0:
@@ -156,8 +157,11 @@ class Method(object):
         else:
           label+=", "+parameter.getLabel()
           count+=1
-      label+=")"
-    label+="\l"
+    label+=")"
+    
+    #add return type
+    if self.returnType!=None:
+      label+=" : "+self.returnType
     return label
   def getTypes(self):
     
@@ -238,17 +242,21 @@ class Class(object):
     #add attribute types
     for attribute in self.attributes:
       if attribute.type!=None:
-          dependencyType="composition"
-          if attribute.scope=="outside":
-            dependencyType="aggregation"
-          self.dependencies.append(Dependency(self.name,target=attribute.type
-            ,type=dependencyType))
+        
+        #remove "*" to match types directly
+        typeTmp=attribute.type.replace("*","")
+        dependencyType="composition"
+        if attribute.scope=="outside":
+          dependencyType="aggregation"
+        self.dependencies.append(Dependency(self.name,target=typeTmp
+          ,type=dependencyType))
     
     #add types from methods
     for method in self.methods:
       methodTypes=method.getTypes()
       for type in methodTypes:
-        self.dependencies.append(Dependency(self.name,target=type
+        typeTmp=type.replace("*","")
+        self.dependencies.append(Dependency(self.name,target=typeTmp
             ,type="dependency"))
     
     #get dependencies
@@ -295,7 +303,7 @@ class Class(object):
     """
     
     graph.node(name=self.name,label=self.getLabel(),shape="record"
-    ,fontname="courier new")
+    ,fontname="courier new",fillcolor="white",style="filled",color="black")
   def getDependencies(self):
     """Returns a list of dependencies
     """
@@ -322,11 +330,16 @@ class Package(object):
     """
     """
     
-    graph=gv.Digraph(self.name)
+    graph=gv.Digraph("cluster_"+self.name)
     
     #add classes to graph
     for classTemp in self.classes:
       classTemp.addToGraph(graph)
+      
+    graph.body.append("label="+self.name)
+    graph.body.append("style=filled")
+    graph.body.append("color=black")
+    graph.body.append("fillcolor=gray94")
     return graph
   def getClasses(self):
     classes=[]
