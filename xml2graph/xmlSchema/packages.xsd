@@ -30,10 +30,11 @@
   <xs:complexType name="class-type">
     <xs:all>
       <xs:element name="name" type="cm:non-empty-str" minOccurs="1" maxOccurs="1"/>
-      <xs:element name="stereotype" type="cm:non-empty-str" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="stereotype" type="stereotype-type" minOccurs="0" maxOccurs="1"/>
       <xs:element name="attributes" type="attributes-type" minOccurs="0" maxOccurs="1"/>
       <xs:element name="methods" type="methods-type"  minOccurs="0" maxOccurs="1"/>
       <xs:element name="dependencies" type="dependencies-type"  minOccurs="0" maxOccurs="1"/>
+      <xs:element name="parents" type="parents-type"  minOccurs="0" maxOccurs="1"/>
     </xs:all>
   </xs:complexType>
   
@@ -55,6 +56,12 @@
     </xs:sequence>
   </xs:complexType>
   
+  <xs:complexType name="parents-type">
+    <xs:sequence>
+      <xs:element name="parent" type="cm:non-empty-str" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  
   <xs:complexType name="dependency-type">
     <xs:all>
       <xs:element name="target" type="cm:non-empty-str" minOccurs="1" maxOccurs="1" />
@@ -68,6 +75,15 @@
        <xs:enumeration value="association"/>
        <xs:enumeration value="aggregation"/>
        <xs:enumeration value="composition"/>
+     </xs:restriction>
+  </xs:simpleType>
+  
+
+  
+  <xs:simpleType name="stereotype-type">
+     <xs:restriction base="xs:string">
+       <xs:enumeration value="enumeration"/>
+       <xs:enumeration value="interface"/>
      </xs:restriction>
   </xs:simpleType>
   

@@ -236,6 +236,13 @@ class Class(object):
         methodTemp=Method(xmlMethod)
         self.methods.append(methodTemp)
     
+    #get parents
+    xmlParents=xmlClass.find("parents")
+    self.parents=[]
+    if xmlParents!=None:
+      for xmlParent in xmlParents:
+        self.parents.append(xmlParent.text)
+    
     #add implicit dependencies
     self.dependencies=[]
     
@@ -259,14 +266,17 @@ class Class(object):
         self.dependencies.append(Dependency(self.name,target=typeTmp
             ,type="dependency"))
     
+    #add parents
+    for parent in self.parents:
+      self.dependencies.append(Dependency(self.name,target=parent
+        ,type="inheritance"))
+      
     #get dependencies
     xmlDependencies=xmlClass.find("dependencies")
     if xmlDependencies!=None:
       for xmlDependency in xmlDependencies:
         dependencyTemp=Dependency(self.name,xmlDependency)
         self.dependencies.append(dependencyTemp)
-    
-    #TODO: perhaps I should process dependencies to remove duplicates some how
   def getLabel(self):
     """
     """
@@ -411,6 +421,32 @@ class PackageManager(object):
               arrowhead="vee"
               arrowtail="diamond"
               style="solid"
+            elif dependency.type=="inheritance":
+              
+              #Find the target class
+              classTarget=None
+              for pacakge in self.packages:
+                for classTmp in package.classes:
+                  
+                  #if we found the target
+                  if classTmp.name==dependency.target:
+                    classTarget=classTmp
+                    break
+              if classTarget==None:
+                raise Exception("the target class\""+dependency.target
+                  +"\" should have been found, something has gone wrong")
+              
+              #set style depending on target's stero type
+              if classTarget.stereotype==None:
+                dir="forward"
+                arrowhead="onormal"
+                arrowtail="none"
+                style="solid"
+              elif classTarget.stereotype=="interface":
+                dir="forward"
+                arrowhead="onormal"
+                arrowtail="none"
+                style="dashed"
             graph.edge(dependency.source,dependency.target,dir=dir
               ,arrowhead=arrowhead,arrowtail=arrowtail,style=style)
     return graph
