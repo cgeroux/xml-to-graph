@@ -470,7 +470,7 @@ def parseOptions():
   parser.add_option("-o",action="store"
     ,dest="outputFileName"
     ,help="Sets the output file name. File extension added automatically "
-    +"[default: %default].",default="graph")
+    +"[default: XMLINPUT with pdf extension].",default=None)
   
   #parse command line options
   return parser.parse_args()
@@ -502,6 +502,10 @@ def main():
   #Parse XML Packages
   xmlPackages=tree.getroot()
   packageManager=PackageManager(xmlPackages)
+  
+  #if no output file set, use the input xml file without extension
+  if options.outputFileName==None:
+    options.outputFileName=os.path.splitext(args[0])[0]
   
   #draw graph
   packageManager.drawGraph(options.outputFileName)
