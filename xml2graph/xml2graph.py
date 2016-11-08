@@ -203,6 +203,10 @@ class Dependency(object):
       self.target=target
     if type!=None:
       self.type=type
+  def __eq__(self,other):
+    return self.__dict__==other.__dict__
+  def __ne__(self,other):
+    return not self==other
 class Class(object):
   """
   """
@@ -244,7 +248,7 @@ class Class(object):
         self.parents.append(xmlParent.text)
     
     #add implicit dependencies
-    self.dependencies=[]
+    tempDep=[]
     
     #add attribute types
     for attribute in self.attributes:
@@ -255,7 +259,7 @@ class Class(object):
         dependencyType="composition"
         if attribute.scope=="outside":
           dependencyType="aggregation"
-        self.dependencies.append(Dependency(self.name,target=typeTmp
+        tempDep.append(Dependency(self.name,target=typeTmp
           ,type=dependencyType))
     
     #add types from methods
@@ -263,12 +267,12 @@ class Class(object):
       methodTypes=method.getTypes()
       for type in methodTypes:
         typeTmp=type.replace("*","")
-        self.dependencies.append(Dependency(self.name,target=typeTmp
+        tempDep.append(Dependency(self.name,target=typeTmp
             ,type="dependency"))
     
     #add parents
     for parent in self.parents:
-      self.dependencies.append(Dependency(self.name,target=parent
+      tempDep.append(Dependency(self.name,target=parent
         ,type="inheritance"))
       
     #get dependencies
@@ -276,7 +280,13 @@ class Class(object):
     if xmlDependencies!=None:
       for xmlDependency in xmlDependencies:
         dependencyTemp=Dependency(self.name,xmlDependency)
-        self.dependencies.append(dependencyTemp)
+        tempDep.append(dependencyTemp)
+    
+    #finally filter out duplicates
+    self.dependencies=[]
+    for dep in tempDep:
+      if dep not in self.dependencies:
+        self.dependencies.append(dep)
   def getLabel(self):
     """
     """
@@ -385,8 +395,6 @@ class PackageManager(object):
   def addEdgesToGraph(self,graph):
     """Adds edges to given graph
     """
-    
-    #TODO: need to implement different dependence types
     
     #get list of all classes
     classes=[]#assume no duplicated class names
