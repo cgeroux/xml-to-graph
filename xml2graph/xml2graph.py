@@ -433,8 +433,8 @@ class PackageManager(object):
               
               #Find the target class
               classTarget=None
-              for pacakge in self.packages:
-                for classTmp in package.classes:
+              for pacakgeInner in self.packages:
+                for classTmp in pacakgeInner.classes:
                   
                   #if we found the target
                   if classTmp.name==dependency.target:
