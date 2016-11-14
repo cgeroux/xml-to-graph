@@ -3,7 +3,6 @@ from __future__ import print_function
 import optparse as op
 from lxml import etree
 import os
-import graphviz as gv
 
 __version__="1.0.0"
 
@@ -318,12 +317,13 @@ class Class(object):
     
     label+="}"
     return label
-  def addToGraph(self,graph):
+  def addToGraph(self,file):
     """
     """
     
-    graph.node(name=self.name,label=self.getLabel(),shape="record"
-    ,fontname="courier new",fillcolor="white",style="filled",color="black")
+    file.write("\t\t"+self.name+" [label=\""+self.getLabel()
+      +"\" color=black fillcolor=white fontname=\"courier new\""
+      +" shape=record style=filled]\n")
   def getDependencies(self):
     """Returns a list of dependencies
     """
@@ -346,21 +346,21 @@ class Package(object):
     for xmlClass in xmlClasses:
       classTemp=Class(xmlClass)
       self.classes.append(classTemp)
-  def getGraph(self):
+  def addGraph(self,file):
     """
     """
     
-    graph=gv.Digraph("cluster_"+self.name)
+    file.write("\tsubgraph cluster_"+self.name+" {\n")
     
     #add classes to graph
     for classTemp in self.classes:
-      classTemp.addToGraph(graph)
-      
-    graph.body.append("label="+self.name)
-    graph.body.append("style=filled")
-    graph.body.append("color=black")
-    graph.body.append("fillcolor=gray94")
-    return graph
+      classTemp.addToGraph(file)
+    
+    file.write("\t\tlabel="+self.name+"\n")
+    file.write("\t\tstyle=filled\n")
+    file.write("\t\tcolor=black\n")
+    file.write("\t\tfillcolor=gray94\n")
+    file.write("\t}\n")
   def getClasses(self):
     classes=[]
     
@@ -381,18 +381,7 @@ class PackageManager(object):
       #create a packages
       package=Package(xmlPackage)
       self.packages.append(package)
-  def getGraph(self,format="pdf"):
-    """
-    """
-    
-    graph=gv.Digraph(format=format)
-    for package in self.packages:
-      graph.subgraph(package.getGraph())
-      
-    #get edges
-    graph=self.addEdgesToGraph(graph)
-    return graph
-  def addEdgesToGraph(self,graph):
+  def addEdges(self,file):
     """Adds edges to given graph
     """
     
@@ -455,18 +444,27 @@ class PackageManager(object):
                 arrowhead="onormal"
                 arrowtail="none"
                 style="dashed"
-            graph.edge(dependency.source,dependency.target,dir=dir
-              ,arrowhead=arrowhead,arrowtail=arrowtail,style=style)
-    return graph
-  def drawGraph(self,fileName):
+            
+            file.write("\t\""+dependency.source+"\" -> \""+dependency.target
+              +"\" [ arrowhead="+arrowhead+" arrowtail="+arrowtail+" dir="
+              +dir+"style="+style+"]\n")
+  def writeGraph(self,fileName):
     """
     """
     
-    #get the graph to draw
-    graph=self.getGraph()
+    file=open(fileName,'w')
     
-    #save as fileName dot file and render to pdf as fileName+".pdf"
-    filename=graph.render(filename=fileName)
+    file.write("digraph {\n")
+    for package in self.packages:
+      package.addGraph(file)
+    
+    graph=self.addEdges(file)
+    
+    file.write("}\n")
+    file.close()
+    
+    #create image
+    
 def parseOptions():
   """Parses command line options
   """
@@ -516,6 +514,6 @@ def main():
     options.outputFileName=os.path.splitext(args[0])[0]
   
   #draw graph
-  packageManager.drawGraph(options.outputFileName)
+  packageManager.writeGraph(options.outputFileName)
 if __name__ == "__main__":
  main()
