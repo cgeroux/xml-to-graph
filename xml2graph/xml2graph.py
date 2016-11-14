@@ -3,6 +3,7 @@ from __future__ import print_function
 import optparse as op
 from lxml import etree
 import os
+import subprocess
 
 __version__="1.0.0"
 
@@ -321,7 +322,7 @@ class Class(object):
     """
     """
     
-    file.write("\t\t"+self.name+" [label=\""+self.getLabel()
+    file.write("\t\t\""+self.name+"\" [label=\""+self.getLabel()
       +"\" color=black fillcolor=white fontname=\"courier new\""
       +" shape=record style=filled]\n")
   def getDependencies(self):
@@ -446,13 +447,13 @@ class PackageManager(object):
                 style="dashed"
             
             file.write("\t\""+dependency.source+"\" -> \""+dependency.target
-              +"\" [ arrowhead="+arrowhead+" arrowtail="+arrowtail+" dir="
-              +dir+"style="+style+"]\n")
+              +"\" [arrowhead="+arrowhead+" arrowtail="+arrowtail+" dir="
+              +dir+" style="+style+"]\n")
   def writeGraph(self,fileName):
     """
     """
     
-    file=open(fileName,'w')
+    file=open(fileName+".dot",'w')
     
     file.write("digraph {\n")
     for package in self.packages:
@@ -464,7 +465,8 @@ class PackageManager(object):
     file.close()
     
     #create image
-    
+    format="pdf"
+    subprocess.call(["dot","-T"+format,fileName+".dot","-o",fileName+"."+format])
 def parseOptions():
   """Parses command line options
   """
